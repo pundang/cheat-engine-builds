@@ -1,0 +1,51 @@
+name: Build and create release
+
+on:
+  push:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Lazarus
+        uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: "3.6"
+
+      - name: Run build command
+        run: lazbuild ./"Cheat Engine"/cheatengine.lpi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cheat-engine
+          path: ./"Cheat Engine"/cheatengine.exe
+          retention-days: 5
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+          body: Automated release of Cheat Engine v${{ github.run_number }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./"Cheat Engine"/cheatengine.exe
+          asset_name: cheatengine.exe
+          asset_content_type: application/octet-stream
