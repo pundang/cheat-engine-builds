@@ -22,7 +22,7 @@ jobs:
         run: lazbuild ./"Cheat Engine"/cheatengine.lpi
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cheat-engine
           path: ./"Cheat Engine"/cheatengine.exe
