@@ -17,10 +17,9 @@ jobs:
         uses: gcarreno/setup-lazarus@v3
         with:
           lazarus-version: "3.6"
-          include-packages: "lazutils, lcl, fpcsrc, buildintf, codetools, freetypelaz, lclbase, lcl, lazcontrols, lclextensions_package, synedit, ideintf, laz.virtualtreeview_package, sqldblaz"
 
       - name: Run build command
-        run: lazbuild ./"Cheat Engine"/cheatengine.lpi
+        run: lazbuild --cpu=x86_64 ./"Cheat Engine"/cheatengine.lpi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
